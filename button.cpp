@@ -11,6 +11,8 @@ using namespace std;
 const int NUMBER_OF_QUESTIONS = 30;
 const int NUMBER_OF_ANSWERS = 4;
 int current_question = 0;
+bool hint_button_clicked[3] = {false, false, false};
+
 bool right_answer[NUMBER_OF_QUESTIONS][NUMBER_OF_ANSWERS] = {{true, false, false, false},  // 1st question
                                                              {false, true, false, false},  // 2nd question
                                                              {false, false, true, false},  // 3rd question
@@ -41,7 +43,7 @@ bool right_answer[NUMBER_OF_QUESTIONS][NUMBER_OF_ANSWERS] = {{true, false, false
                                                              {false, true, false, false},  // 28th question
                                                              {true, false, false, false},  // 29th question
                                                              {false, false, false, true}}; // 30th question
-//int right_answer_flag = 1;
+// int right_answer_flag = 1;
 
 SDL_Renderer *renderer = NULL;
 
@@ -85,20 +87,21 @@ bool Button_texture::load_from_file(string path, bool is_question, bool is_hint)
         }
         else
         {
-        if(!is_question && !is_hint)
+            if (!is_question && !is_hint)
             {
                 width = BUTTON_WIDTH;
                 height = BUTTON_HEIGHT;
             }
-            else if(is_hint)
+            else if (is_hint)
             {
                 width = BUTTON_HINTS_WIDTH;
                 height = BUTTON_HINTS_HEIGHT;
-                }
-                else{
-                    width = loaded_surface->w;
-                    height = loaded_surface->h;
-                    }
+            }
+            else
+            {
+                width = loaded_surface->w;
+                height = loaded_surface->h;
+            }
         }
         SDL_FreeSurface(loaded_surface);
     }
@@ -170,7 +173,6 @@ void Button_texture::handle_button_event(SDL_Event *e)
             case SDL_MOUSEBUTTONDOWN:
                 current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
                 break;
-            
             }
         }
     }
@@ -269,25 +271,20 @@ bool load_button_media()
 
     question_texture.load_from_file("image/q" + to_string(current_question) + "/question.jpg", true, false);
     for (int i = 0; i < 4; i++)
-{
-    button_sprite_clips[i].x = 0;
-    button_sprite_clips[i].y = i * BUTTON_HEIGHT;
-    button_sprite_clips[i].w = BUTTON_WIDTH;
-    button_sprite_clips[i].h = BUTTON_HEIGHT;
-}
-for(int i = 0; i < 3; i++){
-   
-    
-    button_hint_clips[i].x = 0;
-    button_hint_clips[i].y = i * BUTTON_HINTS_HEIGHT;
-    button_hint_clips[i].w = BUTTON_HINTS_WIDTH;
-    button_hint_clips[i].h = BUTTON_HINTS_HEIGHT;
-    
-}
+    {
+        button_sprite_clips[i].x = 0;
+        button_sprite_clips[i].y = i * BUTTON_HEIGHT;
+        button_sprite_clips[i].w = BUTTON_WIDTH;
+        button_sprite_clips[i].h = BUTTON_HEIGHT;
+    }
+    for (int i = 0; i < 3; i++)
+    {
 
-
-
-
+        button_hint_clips[i].x = 0;
+        button_hint_clips[i].y = i * BUTTON_HINTS_HEIGHT;
+        button_hint_clips[i].w = BUTTON_HINTS_WIDTH;
+        button_hint_clips[i].h = BUTTON_HINTS_HEIGHT;
+    }
 
     button_texture[0].set_button_position(285, 465);
     button_texture[1].set_button_position(285, 545);
@@ -342,11 +339,8 @@ void create_buttons()
             SDL_Quit();
             return;
         }
-        
-            
 
-
-        //right_answer_flag = 1; // reset right_answer_flag
+        // right_answer_flag = 1; // reset right_answer_flag
 
         bool quit = false;
 
@@ -371,14 +365,14 @@ void create_buttons()
                         {
                             cout << "Correct!" << endl;
 
-                            //right_answer_flag = 1;
+                            // right_answer_flag = 1;
                             quit = true;
                             current_question++;
                             button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
                         }
                         else
                         {
-                            //right_answer_flag = 2;
+                            // right_answer_flag = 2;
                             current_question++;
                             button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_UP;
 
@@ -388,16 +382,24 @@ void create_buttons()
                     }
                 }
 
-                //hint
+                // hint
                 for (int i = 4; i < 7; i++)
                 {
                     button_texture[i].handle_button_event(&e);
 
                     if (e.type == SDL_MOUSEBUTTONDOWN && button_texture[i].current_sprite == BUTTON_SPRITE_MOUSE_DOWN)
                     {
-                            button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
-                            
-                            cout << "Hint!" << endl;
+                        button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
+                        hint_button_clicked[i - 4] = true;
+                        for (int j = 0; j < 4; j++)
+                        {
+                            if (right_answer[current_question][j])
+                            {
+                                cout << "Right answer is: " << j << endl;
+                            }
+                        }
+
+                        cout << "Hint!" << endl;
                     }
                 }
             }
@@ -410,8 +412,15 @@ void create_buttons()
 
                 button_texture[i].button_render(button_texture[i].button_position.x, button_texture[i].button_position.y, &button_sprite_clips[button_texture[i].current_sprite]);
             }
-            for(int i = 4; i < TOTAL_BUTTONS; i++){
-               button_texture[i].button_render(button_texture[i].button_position.x, button_texture[i].button_position.y, &button_hint_clips[button_texture[i].current_sprite]);
+            for (int i = 4; i < TOTAL_BUTTONS; i++)
+            {
+                if (hint_button_clicked[i - 4])
+                {
+                    button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
+                }
+                
+                button_texture[i].button_render(button_texture[i].button_position.x, button_texture[i].button_position.y, &button_hint_clips[button_texture[i].current_sprite]);
+                
             }
             question_texture.button_render(question_texture.button_position.x, question_texture.button_position.y, NULL);
 
@@ -421,7 +430,6 @@ void create_buttons()
         cout << "Сurrent question is: " << current_question << endl;
         SDL_Delay(2000); // Pause for 2 seconds
     }
-    
 
     SDL_DestroyTexture(existing_texture);
     close_button_texture();
