@@ -390,7 +390,7 @@ void create_buttons()
                     if (e.type == SDL_MOUSEBUTTONDOWN && button_texture[i].current_sprite == BUTTON_SPRITE_MOUSE_DOWN)
                     {
                         button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
-                        hint_button_clicked[i - 4] = true;
+                        hint_button_clicked[i - 4] = true; // hint button is clicked
                         for (int j = 0; j < 4; j++)
                         {
                             if (right_answer[current_question][j])
@@ -414,7 +414,7 @@ void create_buttons()
             }
             for (int i = 4; i < TOTAL_BUTTONS; i++)
             {
-                if (hint_button_clicked[i - 4])
+                if (hint_button_clicked[i - 4]) // if hint button is clicked
                 {
                     button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
                 }
