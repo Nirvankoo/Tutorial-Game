@@ -49,6 +49,7 @@ bool init_button_texture();
 bool init_button_media();
 bool load_button_media();
 void close_button_texture();
+void destroy_button_texture(int current_button);
 
 void create_buttons();
 

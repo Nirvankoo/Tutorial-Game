@@ -307,6 +307,11 @@ void close_button_texture()
     }
 }
 
+void destroy_button_texture(int current_button)
+{
+    button_texture[current_button].~Button_texture();
+}
+
 void create_buttons()
 {
     if (!init_button_media())
@@ -391,13 +396,25 @@ void create_buttons()
                     {
                         button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
                         hint_button_clicked[i - 4] = true; // hint button is clicked
+                         int count = 0;
                         for (int j = 0; j < 4; j++)
                         {
-                            if (right_answer[current_question][j])
-                            {
-                                cout << "Right answer is: " << j << endl;
-                            }
+                                
+                                if(!right_answer[current_question][j])
+                                {
+                                   
+                                    if(count < 2)
+                                    {
+                                    destroy_button_texture(j);
+                                    count++;
+                                    }
+
+                                   
+                                }
+                                 
+                            
                         }
+                        
 
                         cout << "Hint!" << endl;
                     }
@@ -418,9 +435,8 @@ void create_buttons()
                 {
                     button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
                 }
-                
+
                 button_texture[i].button_render(button_texture[i].button_position.x, button_texture[i].button_position.y, &button_hint_clips[button_texture[i].current_sprite]);
-                
             }
             question_texture.button_render(question_texture.button_position.x, question_texture.button_position.y, NULL);
 
