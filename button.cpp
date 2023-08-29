@@ -395,17 +395,9 @@ void create_buttons()
 
                     if (e.type == SDL_MOUSEBUTTONDOWN && button_texture[i].current_sprite == BUTTON_SPRITE_MOUSE_DOWN)
                     {
-                        if(i == 4){
-                            button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
-                        }
-                        else if(i == 5){
                             button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
                             
-                        }
-                        else if(i == 6){
-                            button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
-                            
-                        }   
+                            cout << "Hint!" << endl;
                     }
                 }
             }
