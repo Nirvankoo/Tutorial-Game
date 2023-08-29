@@ -12,6 +12,7 @@ const int NUMBER_OF_QUESTIONS = 30;
 const int NUMBER_OF_ANSWERS = 4;
 int current_question = 0;
 bool hint_button_clicked[3] = {false, false, false};
+int hint_count = 0;
 
 bool right_answer[NUMBER_OF_QUESTIONS][NUMBER_OF_ANSWERS] = {{true, false, false, false},  // 1st question
                                                              {false, true, false, false},  // 2nd question
@@ -388,35 +389,77 @@ void create_buttons()
                 }
 
                 // hint
-                for (int i = 4; i < 7; i++)
+               if(hint_count != 3)
                 {
-                    button_texture[i].handle_button_event(&e);
 
-                    if (e.type == SDL_MOUSEBUTTONDOWN && button_texture[i].current_sprite == BUTTON_SPRITE_MOUSE_DOWN)
+                    for (int i = 4; i < 7; i++)
                     {
-                        button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
-                        hint_button_clicked[i - 4] = true; // hint button is clicked
-                         int count = 0;
-                        for (int j = 0; j < 4; j++)
+                        button_texture[i].handle_button_event(&e);
+
+                        if (e.type == SDL_MOUSEBUTTONDOWN && button_texture[i].current_sprite == BUTTON_SPRITE_MOUSE_DOWN)
                         {
-                                
-                                if(!right_answer[current_question][j])
+                            button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
+                            hint_button_clicked[i - 4] = true;  // hint button is clicked
+                             hint_count++;
+                            int count = 0;
+
+                            switch (i)
+                            {
+                            case 4:
+                            {
+                                for (int j = 0; j < 4; j++)
                                 {
-                                   
-                                    if(count < 2)
+
+                                    if (!right_answer[current_question][j])
                                     {
-                                    destroy_button_texture(j);
-                                    count++;
+
+                                        if (count < 2)
+                                        {
+                                            destroy_button_texture(j);
+                                            count++;
+                                           
+                                        }
                                     }
-
-                                   
                                 }
-                                 
-                            
-                        }
-                        
+                            }
+                            case 5:
+                            {
+                                for (int j = 0; j < 4; j++)
+                                {
 
-                        cout << "Hint!" << endl;
+                                    if (!right_answer[current_question][j])
+                                    {
+
+                                        if (count < 3)
+                                        {
+                                            destroy_button_texture(j);
+                                            count++;
+                                            
+                                        }
+                                    }
+                                }
+                            }
+                            case 6:
+                            {
+                                for (int j = 0; j < 4; j++)
+                                {
+
+                                    if (!right_answer[current_question][j])
+                                    {
+
+                                        if (count < 3)
+                                        {
+                                            destroy_button_texture(j);
+                                            count++;
+                                           
+                                        }
+                                    }
+                                }
+                            }
+                            }
+
+                            cout << "Hint!" << endl;
+                        }
                     }
                 }
             }
