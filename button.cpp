@@ -13,6 +13,7 @@ const int NUMBER_OF_ANSWERS = 4;
 int current_question = 0;
 bool hint_button_clicked[3] = {false, false, false};
 int hint_count = 0;
+bool interaction_in_progress = false;
 
 bool right_answer[NUMBER_OF_QUESTIONS][NUMBER_OF_ANSWERS] = {{true, false, false, false},  // 1st question
                                                              {false, true, false, false},  // 2nd question
@@ -348,9 +349,8 @@ void create_buttons()
 
         // right_answer_flag = 1; // reset right_answer_flag
 
-        bool quit = false;
-
         SDL_Event e;
+        bool quit = false;
 
         while (!quit)
         {
@@ -359,6 +359,11 @@ void create_buttons()
                 if (e.type == SDL_QUIT)
                 {
                     quit = true;
+                }
+
+                if (interaction_in_progress)
+                {
+                    continue;
                 }
 
                 for (int i = 0; i < 4; i++)
@@ -370,37 +375,46 @@ void create_buttons()
                         if (right_answer[current_question][i])
                         {
                             cout << "Correct!" << endl;
+                            interaction_in_progress = true;
 
                             // right_answer_flag = 1;
                             quit = true;
                             current_question++;
                             button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
+                            
                         }
                         else
                         {
                             // right_answer_flag = 2;
+                            interaction_in_progress = true;
                             current_question++;
                             button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_UP;
 
                             cout << "Wrong!" << endl;
                             quit = true;
+                           
                         }
+                        interaction_in_progress = false;
                     }
                 }
 
                 // hint
-               if(hint_count != 3)
+                if (hint_count != 3)
                 {
-
+                    if (interaction_in_progress)
+                    {
+                        continue; // Skip processing further events
+                    }
                     for (int i = 4; i < 7; i++)
                     {
                         button_texture[i].handle_button_event(&e);
 
                         if (e.type == SDL_MOUSEBUTTONDOWN && button_texture[i].current_sprite == BUTTON_SPRITE_MOUSE_DOWN)
                         {
+                            interaction_in_progress = true;
                             button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_DOWN;
-                            hint_button_clicked[i - 4] = true;  // hint button is clicked
-                             hint_count++;
+                            hint_button_clicked[i - 4] = true; // hint button is clicked
+                            hint_count++;
                             int count = 0;
 
                             switch (i)
@@ -417,7 +431,7 @@ void create_buttons()
                                         {
                                             destroy_button_texture(j);
                                             count++;
-                                           
+                                            interaction_in_progress = false;
                                         }
                                     }
                                 }
@@ -434,7 +448,7 @@ void create_buttons()
                                         {
                                             destroy_button_texture(j);
                                             count++;
-                                            
+                                            interaction_in_progress = false;
                                         }
                                     }
                                 }
@@ -451,7 +465,7 @@ void create_buttons()
                                         {
                                             destroy_button_texture(j);
                                             count++;
-                                           
+                                            interaction_in_progress = false;
                                         }
                                     }
                                 }
@@ -486,7 +500,7 @@ void create_buttons()
             SDL_RenderPresent(renderer);
         }
 
-        cout << "Сurrent question is: " << current_question << endl;
+        cout << "Current question is: " << current_question << endl;
         SDL_Delay(2000); // Pause for 2 seconds
     }
 
