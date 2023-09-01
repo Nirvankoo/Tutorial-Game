@@ -5,11 +5,11 @@
 #include "window.h"
 #include "button.h"
 #include "game.h"
+#include"result.h"
 using namespace std;
 // comment
 
-const int NUMBER_OF_QUESTIONS = 30;
-const int NUMBER_OF_ANSWERS = 4;
+
 int current_question = 0;
 bool hint_button_clicked[3] = {false, false, false};
 int hint_count = 0;
@@ -46,6 +46,7 @@ bool right_answer[NUMBER_OF_QUESTIONS][NUMBER_OF_ANSWERS] = {{true, false, false
                                                              {true, false, false, false},  // 29th question
                                                              {false, false, false, true}}; // 30th question
 // int right_answer_flag = 1;
+bool given_answer[NUMBER_OF_QUESTIONS][NUMBER_OF_ANSWERS] = {false};
 
 SDL_Renderer *renderer = NULL;
 
@@ -375,6 +376,7 @@ void create_buttons()
                         if (right_answer[current_question][i])
                         {
                             cout << "Correct!" << endl;
+                            given_answer[current_question][i] = true;
                             interaction_in_progress = true;
 
                             // right_answer_flag = 1;
@@ -386,6 +388,7 @@ void create_buttons()
                         else
                         {
                             // right_answer_flag = 2;
+                            given_answer[current_question][i] = true;
                             interaction_in_progress = true;
                             current_question++;
                             button_texture[i].current_sprite = BUTTON_SPRITE_MOUSE_UP;
@@ -501,15 +504,22 @@ void create_buttons()
         }
 
         cout << "Current question is: " << current_question << endl;
-        SDL_Delay(2000); // Pause for 2 seconds
+        SDL_Delay(1000); // Pause for 2 seconds
+    }
+
+    for(int i = 0; i < NUMBER_OF_QUESTIONS; i++){
+        for(int j = 0; j < NUMBER_OF_ANSWERS; j++){
+            cout << given_answer[i][j] << " ";
+        }
+        cout << endl;
     }
 
     SDL_DestroyTexture(existing_texture);
     close_button_texture();
 
-    SDL_DestroyRenderer(renderer);
+    //SDL_DestroyRenderer(renderer);
 
-    SDL_DestroyWindow(main_window);
-    IMG_Quit();
-    SDL_Quit();
+    //SDL_DestroyWindow(main_window);
+    //IMG_Quit();
+    //SDL_Quit();
 }

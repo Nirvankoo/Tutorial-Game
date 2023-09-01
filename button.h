@@ -14,6 +14,15 @@ const int BUTTON_HINTS_HEIGHT = 75;
 const int TOTAL_BUTTONS = 7;
 const int TOTAL_HINTS = 3;
 
+const int NUMBER_OF_QUESTIONS = 30;
+const int NUMBER_OF_ANSWERS = 4;
+
+extern bool right_answer[NUMBER_OF_QUESTIONS][NUMBER_OF_ANSWERS];
+extern bool given_answer[NUMBER_OF_QUESTIONS][NUMBER_OF_ANSWERS];
+
+
+
+
 enum Button_current_sprite{
     BUTTON_SPRITE_MOUSE_OUT = 0,
     
@@ -44,6 +53,7 @@ class Button_texture{
     
     
 };
+extern SDL_Renderer *renderer;
 
 bool init_button_texture();
 bool init_button_media();

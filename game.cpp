@@ -42,7 +42,7 @@ void create_game(){
         {
             if (game_event.type == SDL_QUIT || game_event.type == SDL_KEYDOWN)
             {
-                game_quit = true; // Exit the event loop if the user closes the window
+                game_quit = true; // 
             }
            
         }

@@ -5,6 +5,7 @@
 #include"game.h"
 #include"button.h"
 #include<windows.h>
+#include"result.h"
 
 using namespace std;
 
@@ -22,6 +23,7 @@ int main(int argc, char *argv[])
    press_any_key();
    create_game();
    create_buttons();
+   show_result();
 
     return 0;
 }
