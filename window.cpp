@@ -153,6 +153,7 @@ void press_any_key(){
             if (press_any_key_event.type == SDL_QUIT)
             {
                 press_any_key_quit = true; // Exit the event loop if the user closes the window
+                exit(0); // exit a game if user pressed close button
             }
             else if (press_any_key_event.type == SDL_KEYDOWN)
             {

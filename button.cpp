@@ -359,7 +359,7 @@ void create_buttons()
             {
                 if (e.type == SDL_QUIT)
                 {
-                    quit = true;
+                   exit(1);
                 }
 
                 if (interaction_in_progress)

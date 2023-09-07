@@ -40,9 +40,12 @@ void create_game(){
     {
         while (SDL_PollEvent(&game_event) != 0)
         {
-            if (game_event.type == SDL_QUIT || game_event.type == SDL_KEYDOWN)
+            if (game_event.type == SDL_KEYDOWN)
             {
                 game_quit = true; // 
+            }
+            else if(game_event.type == SDL_QUIT){
+                exit(0);
             }
            
         }
